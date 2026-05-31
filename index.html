@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Zoom Contact Center | CRM Screen Pop Demo</title>
+  <style>
+    :root {
+      --zoom-blue: #0b5cff;
+      --zoom-blue-2: #2563eb;
+      --zoom-dark: #0b1220;
+      --text: #172033;
+      --muted: #697386;
+      --line: #e6eaf2;
+      --card: rgba(255, 255, 255, 0.86);
+      --bg: #f5f8ff;
+      --success: #1f9d55;
+      --shadow: 0 24px 60px rgba(20, 35, 65, 0.12);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 12% 18%, rgba(11, 92, 255, 0.14), transparent 28%),
+        radial-gradient(circle at 85% 10%, rgba(70, 126, 255, 0.16), transparent 32%),
+        linear-gradient(135deg, #f8fbff 0%, #eef4ff 50%, #f8fbff 100%);
+    }
+
+    .topbar {
+      height: 86px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 42px;
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(230, 234, 242, 0.9);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-weight: 800;
+      font-size: clamp(22px, 2vw, 34px);
+      letter-spacing: -0.04em;
+    }
+
+    .brand-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 13px;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: linear-gradient(135deg, var(--zoom-blue), #3c7dff);
+      box-shadow: 0 14px 30px rgba(11, 92, 255, 0.28);
+    }
+
+    .clock {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 15px;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    main {
+      width: min(1440px, calc(100% - 52px));
+      margin: 40px auto 54px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .crm-card { width: min(1280px, 100%); margin: 0 auto; }
+
+    .crm-card, .side-card, .note-card {
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      overflow: hidden;
+      backdrop-filter: blur(18px);
+    }
+
+    .card-header {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 20px 28px;
+      color: white;
+      background: linear-gradient(120deg, var(--zoom-blue), #2f6df6 58%, #1750d6);
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(255,255,255,0.34);
+      background: rgba(255,255,255,0.14);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #6dff9e;
+      box-shadow: 0 0 0 7px rgba(109, 255, 158, 0.16);
+    }
+
+    .card-body { padding: 30px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px 28px;
+    }
+
+    .field label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 9px;
+      color: #334155;
+      font-size: 14px;
+      font-weight: 750;
+    }
+
+    .param {
+      color: var(--zoom-blue);
+      background: #eef4ff;
+      border: 1px solid #d8e5ff;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.82);
+      border-radius: 14px;
+      padding: 17px 18px;
+      min-height: 57px;
+      font: inherit;
+      font-weight: 650;
+      color: var(--text);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
+      outline: none;
+      transition: border-color .18s, box-shadow .18s, transform .18s;
+    }
+
+    input:focus {
+      border-color: rgba(11, 92, 255, 0.55);
+      box-shadow: 0 0 0 4px rgba(11, 92, 255, 0.10), 0 8px 20px rgba(15, 23, 42, 0.04);
+    }
+
+    .wide { grid-column: 1 / -1; }
+
+    .actions {
+      margin-top: 28px;
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    button, .button-link {
+      border: 0;
+      border-radius: 14px;
+      padding: 15px 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      color: white;
+      background: linear-gradient(135deg, #24a148, #2fb85d);
+      box-shadow: 0 14px 30px rgba(31, 157, 85, 0.22);
+      text-decoration: none;
+      transition: transform .16s, box-shadow .16s, filter .16s;
+    }
+
+    button:hover, .button-link:hover { transform: translateY(-1px); filter: brightness(1.02); }
+    button:active, .button-link:active { transform: translateY(0); }
+
+    .secondary {
+      color: var(--zoom-blue);
+      background: #edf4ff;
+      border: 1px solid #d9e6ff;
+      box-shadow: none;
+    }
+
+    .ghost {
+      color: #435066;
+      background: rgba(255,255,255,0.75);
+      border: 1px solid var(--line);
+      box-shadow: none;
+    }
+
+    .side-card { padding: 28px; }
+
+    .side-card h2 {
+      margin: 0 0 9px;
+      font-size: 26px;
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+    }
+
+    .side-card p {
+      margin: 0 0 22px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-weight: 560;
+    }
+
+    .metric-row {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 16px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .metric-row:first-of-type { border-top: 0; }
+
+    .metric-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      color: var(--zoom-blue);
+      background: #eef4ff;
+      font-weight: 900;
+    }
+
+    .metric-row strong { display:block; margin-bottom: 3px; }
+    .metric-row span { color: var(--muted); line-height: 1.45; font-size: 14px; }
+
+    .url-box {
+      margin-top: 20px;
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px dashed #bfd1f7;
+      background: #f7faff;
+      color: #385077;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      word-break: break-all;
+    }
+
+    .note-card {
+      margin: 34px auto 0;
+      width: min(940px, 100%);
+      padding: 20px 24px;
+      color: #344b82;
+      border-color: #d8e5ff;
+      background: rgba(248, 251, 255, 0.88);
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      line-height: 1.55;
+      font-weight: 600;
+    }
+
+    .small { font-size: 13px; color: var(--muted); margin-top: 11px; }
+
+    .toast {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      padding: 14px 18px;
+      border-radius: 14px;
+      color: white;
+      background: #14213d;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: opacity .22s, transform .22s;
+      font-weight: 750;
+      z-index: 20;
+    }
+
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    svg { width: 20px; height: 20px; flex: none; }
+
+    @media (max-width: 980px) {
+      .hero { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: 1fr; }
+      .topbar { padding: 0 24px; }
+      main { width: min(100% - 28px, 1440px); margin-top: 24px; }
+      .clock { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M7.4 5.2 9 4.7c.9-.3 1.9.2 2.2 1.1l.7 2c.2.7 0 1.4-.6 1.8l-1.1.8a10.2 10.2 0 0 0 4.4 4.4l.8-1.1c.4-.6 1.2-.8 1.8-.6l2 .7c.9.3 1.4 1.3 1.1 2.2l-.5 1.6c-.3.9-1.1 1.4-2 1.4C10.7 19 5 13.3 5 6.2c0-.9.6-1.7 1.4-2Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <span>CRM Screen Pop</span>
+    </div>
+    <div class="clock" id="clock">Loading time…</div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <article class="crm-card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M20 21a8 8 0 0 0-16 0M12 13a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Customer Information
+          </div>
+          <div class="status-pill"><span class="pulse"></span><span id="eventBadge">Launch URL demo</span></div>
+        </div>
+
+        <div class="card-body">
+          <div class="grid">
+            <div class="field">
+              <label for="firstName">First Name <span class="param">%F</span></label>
+              <input id="firstName" autocomplete="off" />
+            </div>
+            <div class="field">
+              <label for="queue">Queue <span class="param">%Q</span></label>
+              <input id="queue" autocomplete="off" />
+            </div>
+            <div class="field">
+              <label for="lastName">Last Name <span class="param">%L</span></label>
+              <input id="lastName" autocomplete="off" />
+            </div>
+            <div class="field">
+              <label for="engagementId">Engagement ID <span class="param">%ID</span></label>
+              <input id="engagementId" autocomplete="off" />
+            </div>
+            <div class="field">
+              <label for="phone">Phone Number <span class="param">%E / %C</span></label>
+              <input id="phone" autocomplete="off" />
+            </div>
+            <div class="field">
+              <label for="channel">Channel <span class="param">%CN</span></label>
+              <input id="channel" autocomplete="off" />
+            </div>
+            <div class="field">
+              <label for="direction">Direction <span class="param">%DIR</span></label>
+              <input id="direction" autocomplete="off" />
+            </div>
+            <div class="field">
+              <label for="trigger">Trigger <span class="param">%EVT</span></label>
+              <input id="trigger" autocomplete="off" />
+            </div>
+          </div>
+
+          <div class="actions">
+            <button id="noteBtn" type="button">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M14 3v4a1 1 0 0 0 1 1h4M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2ZM9 13h6M9 17h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Create Note
+            </button>
+            <button id="taskBtn" type="button">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              Add Task
+            </button>
+          </div>
+        </div>
+      </article>
+
+    </section>
+  </main>
+
+  <div class="toast" id="toast">Copied</div>
+
+  <script>
+    const fields = {
+      firstName: document.getElementById('firstName'),
+      lastName: document.getElementById('lastName'),
+      phone: document.getElementById('phone'),
+      queue: document.getElementById('queue'),
+      engagementId: document.getElementById('engagementId'),
+      channel: document.getElementById('channel'),
+      direction: document.getElementById('direction'),
+      trigger: document.getElementById('trigger')
+    };
+
+    const aliases = {
+      firstName: ['firstName', 'first', 'F', '%F'],
+      lastName: ['lastName', 'last', 'L', '%L'],
+      phone: ['phone', 'mobile', 'E', 'C', '%E', '%C'],
+      queue: ['queue', 'Q', '%Q'],
+      engagementId: ['engagementId', 'id', 'ID', '%ID'],
+      channel: ['channel', 'CN', '%CN'],
+      direction: ['direction', 'DIR', '%DIR'],
+      trigger: ['trigger', 'event', 'EVT', '%EVT']
+    };
+
+    function getParam(params, names) {
+      for (const name of names) {
+        if (params.has(name)) return params.get(name);
+      }
+      return '';
+    }
+
+    function fillFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const defaults = {
+        firstName: '',
+        lastName: '',
+        phone: '',
+        queue: '',
+        engagementId: '',
+        channel: '',
+        direction: '',
+        trigger: ''
+      };
+
+      for (const key of Object.keys(fields)) {
+        const incoming = getParam(params, aliases[key]);
+        fields[key].value = incoming || defaults[key];
+      }
+      updateComputedUi();
+    }
+
+    function updateComputedUi() {
+      const direction = fields.direction.value;
+      const trigger = fields.trigger.value;
+      document.getElementById('eventBadge').textContent = direction || trigger ? `${direction || 'Engagement'}${direction && trigger ? ' • ' : ''}${trigger}` : 'Waiting for screen pop';
+    }
+
+    function buildDemoUrl() {
+      const base = window.location.href.split('?')[0];
+      const params = new URLSearchParams({
+        firstName: fields.firstName.value || 'Alex',
+        lastName: fields.lastName.value || 'Rivera',
+        phone: fields.phone.value || '+61400111222',
+        queue: fields.queue.value || 'VIP Support',
+        engagementId: fields.engagementId.value || 'ENG-10458',
+        channel: fields.channel.value || 'Voice',
+        direction: fields.direction.value || 'Inbound',
+        trigger: fields.trigger.value || 'Ringing'
+      });
+      return `${base}?${params.toString()}`;
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 1800);
+    }
+
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('clock').textContent = now.toLocaleString(undefined, {
+        weekday: 'short', year: 'numeric', month: 'short', day: 'numeric',
+        hour: 'numeric', minute: '2-digit', second: '2-digit'
+      });
+    }
+
+
+
+    document.getElementById('noteBtn').addEventListener('click', () => showToast('Mock note created'));
+    document.getElementById('taskBtn').addEventListener('click', () => showToast('Mock task added'));
+
+    Object.values(fields).forEach(el => el.addEventListener('input', updateComputedUi));
+    Object.values(fields).forEach(el => el.addEventListener('change', updateComputedUi));
+
+    fillFromUrl();
+    updateClock();
+    setInterval(updateClock, 1000);
+  </script>
+</body>
+</html>
