@@ -383,6 +383,10 @@
               <label for="trigger">Trigger <span class="param">%EVT</span></label>
               <input id="trigger" autocomplete="off" />
             </div>
+            <div class="field wide">
+              <label for="customVariable">Custom Variable <span class="param">customVariable</span></label>
+              <input id="customVariable" autocomplete="off" />
+            </div>
           </div>
 
           <div class="actions">
@@ -412,7 +416,8 @@
       engagementId: document.getElementById('engagementId'),
       channel: document.getElementById('channel'),
       direction: document.getElementById('direction'),
-      trigger: document.getElementById('trigger')
+      trigger: document.getElementById('trigger'),
+      customVariable: document.getElementById('customVariable')
     };
 
     const aliases = {
@@ -423,7 +428,8 @@
       engagementId: ['engagementId', 'id', 'ID', '%ID'],
       channel: ['channel', 'CN', '%CN'],
       direction: ['direction', 'DIR', '%DIR'],
-      trigger: ['trigger', 'event', 'EVT', '%EVT']
+      trigger: ['trigger', 'event', 'EVT', '%EVT'],
+      customVariable: ['customVariable', 'custom', 'customVar', 'variable', 'CUSTOM', '%CUSTOM']
     };
 
     function getParam(params, names) {
@@ -443,7 +449,8 @@
         engagementId: '',
         channel: '',
         direction: '',
-        trigger: ''
+        trigger: '',
+        customVariable: ''
       };
 
       for (const key of Object.keys(fields)) {
@@ -469,7 +476,8 @@
         engagementId: fields.engagementId.value || 'ENG-10458',
         channel: fields.channel.value || 'Voice',
         direction: fields.direction.value || 'Inbound',
-        trigger: fields.trigger.value || 'Ringing'
+        trigger: fields.trigger.value || 'Ringing',
+        customVariable: fields.customVariable.value || 'Gold Member'
       });
       return `${base}?${params.toString()}`;
     }
